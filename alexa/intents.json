@@ -22,6 +22,9 @@
       "intent": "DontKnowIntent"
     },
     {
+      "intent": "RepeatIntent"
+    },
+    {
       "intent": "AMAZON.HelpIntent"
     },
     {

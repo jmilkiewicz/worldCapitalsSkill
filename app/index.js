@@ -132,6 +132,12 @@ const basicIntents = {
       let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
       this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
     });
+  },
+  'RepeatIntent': function () {
+    game.repeat(this.attributes).then(reply =>{
+      let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
+      this.emit(':askWithCard', repromptText, repromptText, this.t("GAME_NAME"), repromptText);
+    });
   }
 };
 

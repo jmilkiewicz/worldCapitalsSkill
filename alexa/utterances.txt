@@ -14,3 +14,7 @@ DontKnowIntent who knows
 DontKnowIntent i don't know this question
 DontKnowIntent i don't know that one
 DontKnowIntent dunno
+
+RepeatIntent again
+RepeatIntent again please
+RepeatIntent can you ask again

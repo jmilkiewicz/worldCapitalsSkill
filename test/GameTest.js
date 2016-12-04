@@ -41,6 +41,19 @@ describe('get Capitals of Country', () => {
     });
   });
 
+
+  describe('on repeat', () => {
+
+    it('returns last asked Country', () => {
+      const sessionData = { countries: ["Poland", "Belgium"], askForIndex: 1, score: 0 };
+      const expectedData = { askFor: 'Belgium' } ;
+
+      return game.repeat(sessionData).then((result) => {
+        expect(result).to.equal({ session: sessionData, data: expectedData });
+      });
+    });
+  });
+
   describe('on skip', () => {
 
     beforeEach((done) => {

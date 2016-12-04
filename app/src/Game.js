@@ -25,12 +25,12 @@ const summary = (sessionData) => ({
 
 const endOfGameReply = _.flow(summary, _.extend({ endGame: true }));
 
-function progressData(newSession) {
+function progressData(sessionData) {
   let extras;
-  if (isEndOfGame(newSession)) {
-    extras = endOfGameReply(newSession)
+  if (isEndOfGame(sessionData)) {
+    extras = endOfGameReply(sessionData)
   } else {
-    extras = { askFor: countryToAsk(newSession) }
+    extras = { askFor: countryToAsk(sessionData) }
   }
   return extras;
 }
@@ -79,6 +79,12 @@ module.exports = (dao) => {
       });
     },
 
+    repeat(sessionData) {
+      return Promise.resolve({
+        session: sessionData,
+        data: { askFor: countryToAsk(sessionData)}
+      });
+    },
     finish(sessionData) {
       return Promise.resolve({
         data: summary(sessionData)
