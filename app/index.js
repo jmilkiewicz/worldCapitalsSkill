@@ -9,17 +9,17 @@ const APP_ID = 'amzn1.ask.skill.38899241-ff42-425b-984e-9f5993270e76';
 const languageStrings = {
   'en-GB': {
     translation: {
-      GET_FACT_MESSAGE: "Next free day is: ",
-      HELP_MESSAGE: 'You can say tell me what is the next day i can stay in bed till noon... What can I help you with?',
-      HELP_REPROMPT: 'What can I help you with?',
-      DISPLAY_CARD_TITLE: "%s  - Next Free Day in %s.",
-      COUNTRY_NOT_DEFINED: "I\'m sorry, I do not know in which country to look for.",
-      CALENDAR_NOT_FOUND: "I can not find a calendar for %s.",
-      "RECIPE_REPEAT_MESSAGE": "Try saying repeat.",
-      "NOT_FOUND_REPROMPT": "What else can I help with?",
+      QUESTION: "Question number %d. What is a capital of %s ? ",
+      ANSWER: "The capital of %s is  %s .",
+      CHEERUP: "Don't give up, you are doing well .",
+      SUMMARY: "Your final result is : %d correct answers of %d questions. Hoped you had a fun !",
+      NO_MORE_QUESTIONS: "Unfortunately it was the last question. ",
+      CORRECT_ANSWER: "That's right. Good one !",
+      WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
+      GAME_NAME: 'Guess Capitals Game',
+      HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying stop, you can say repeat to have last question repeated',
       STOP_MESSAGE: 'Goodbye!',
-      WELCOME_MESSAGE: "Welcome to %s. You can ask a question like, what\'s the next free day in Poland? ... Now, what can I help you with.",
-      WELCOME_REPROMT: "For instructions on what you can say, please say help me.",
+      WELCOME_MESSAGE: "Welcome to %s . I will ask you for a capital name of countries. Try to get as many right as you can. Good Luck !"
     },
   },
   'en-US': {
@@ -32,18 +32,9 @@ const languageStrings = {
       CORRECT_ANSWER: "That's right. Good one !",
       WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
       GAME_NAME :'Guess Capitals Game',
-      SKILL_NAME: 'Next free day',
-      GET_FACT_MESSAGE: "Next free day is: ",
-      HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying stop',
-      HELP_REPROMPT: 'What can I help you with?',
-      DISPLAY_CARD_TITLE: "%s  - Next Free Day in %s.",
-      COUNTRY_NOT_DEFINED: "I\'m sorry, I do not know in which country to look for",
-      CALENDAR_NOT_FOUND: "I can not find a calendar for %s.",
-      "RECIPE_REPEAT_MESSAGE": "Try saying repeat.",
-      "NOT_FOUND_REPROMPT": "What else can I help with?",
+      HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying stop, you can say repeat to have last question repeated',
       STOP_MESSAGE: 'Goodbye!',
-      WELCOME_MESSAGE: "Welcome to %s. You can ask a question like, what\'s the next free day in Poland? ... Now, what can I help you with.",
-      WELCOME_REPROMT: "For instructions on what you can say, please say help me.",
+      WELCOME_MESSAGE: "Welcome to %s . I will ask you for a capital name of countries. Try to get as many right as you can. Good Luck !"
     },
   }
 };
@@ -62,7 +53,7 @@ const finishGame = function (extraText) {
 const startGame = function () {
   game.startGame().then(reply => {
     Object.assign(this.attributes, reply.session);
-    let speechOutput = `Welcome to ${this.t('GAME_NAME')}. I will ask you for capital of countries. Try to get as many right as you can. Good Luck !`;
+    let speechOutput = this.t('WELCOME_MESSAGE', this.t('GAME_NAME'));
     let repromptText = this.t('QUESTION', 1, reply.data.askFor);
     this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
   });
