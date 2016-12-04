@@ -4,7 +4,7 @@ const Alexa = require('alexa-sdk');
 const dao = require('./src/capitalsRepo');
 const game = require('./src/Game')(dao);
 
-const APP_ID = 'sasdsa';
+const APP_ID = 'amzn1.ask.skill.38899241-ff42-425b-984e-9f5993270e76';
 
 const languageStrings = {
   'en-GB': {
