@@ -16,7 +16,7 @@ const languageStrings = {
       NO_MORE_QUESTIONS: "Unfortunately it was the last question. ",
       CORRECT_ANSWER: "That's right. Good one !",
       WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
-      GAME_NAME: 'Guess Capitals Game',
+      GAME_NAME: 'Guess World Capitals Game',
       HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying stop, you can say repeat to have last question repeated',
       STOP_MESSAGE: 'Goodbye!',
       WELCOME_MESSAGE: "Welcome to %s . I will ask you for a capital name of countries. Try to get as many right as you can. Good Luck !"
@@ -31,7 +31,7 @@ const languageStrings = {
       NO_MORE_QUESTIONS: "Unfortunately it was the last question. ",
       CORRECT_ANSWER: "That's right. Good one !",
       WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
-      GAME_NAME :'Guess Capitals Game',
+      GAME_NAME :'Guess World Capitals Game',
       HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying stop, you can say repeat to have last question repeated',
       STOP_MESSAGE: 'Goodbye!',
       WELCOME_MESSAGE: "Welcome to %s . I will ask you for a capital name of countries. Try to get as many right as you can. Good Luck !"
