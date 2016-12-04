@@ -1,0 +1,34 @@
+{
+  "intents": [
+    {
+      "intent": "AnswerIntent",
+      "slots": [
+        {
+          "name": "City",
+          "type": "LIST_OF_CITIES"
+        }
+      ]
+    },
+    {
+      "intent": "AnswerOnlyIntent",
+      "slots": [
+        {
+          "name": "City",
+          "type": "LIST_OF_CITIES"
+        }
+      ]
+    },
+    {
+      "intent": "DontKnowIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
