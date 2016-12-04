@@ -26,9 +26,9 @@ const languageStrings = {
     translation: {
       QUESTION: "Question number %d. What is a capital of %s ? ",
       ANSWER: "The capital of %s is  %s .",
-      CHEERUP:"Do not give up, you are doing well .",
-      SUMMARY: "This is your result: you replied correctly for %d of %d questions. Hoped you have fun !",
-      NO_MORE_QUESTIONS: "We reached the end of questions !",
+      CHEERUP:"Don't give up, you are doing well .",
+      SUMMARY: "Your final result is : %d correct answers of %d questions. Hoped you had a fun !",
+      NO_MORE_QUESTIONS: "Unfortunately it was the last question. ",
       CORRECT_ANSWER: "That's right. Good one !",
       WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
       GAME_NAME :'Guess Capitals Game',
@@ -99,10 +99,12 @@ const basicIntents = {
       game.skip(this.attributes).then(reply=>{
         Object.assign(this.attributes, reply.session);
         const replyData = reply.data;
-        let speechOutput = this.t('CHEERUP') + this.t('ANSWER', replyData.county, replyData.capital);
+        const answer = this.t('ANSWER', replyData.county, replyData.capital);
+
         if (replyData.endGame) {
-          return finishGame(speechOutput)
+          return finishGame.call(this, answer + this.t("NO_MORE_QUESTIONS"))
         }
+        let speechOutput = this.t('CHEERUP') + answer;
 
         //TODO move question index to reply
         let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
@@ -121,7 +123,7 @@ const basicIntents = {
       if(replyData.success){
         speechOutput = this.t("CORRECT_ANSWER");
         if (replyData.endGame) {
-          return finishGame(speechOutput);
+          return finishGame.call(this, speechOutput + this.t("NO_MORE_QUESTIONS"))
         }
       }else{
         speechOutput = this.t("WRONG_ANSWER");
