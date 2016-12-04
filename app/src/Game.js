@@ -21,8 +21,9 @@ module.exports = (dao) => {
   return {
     startGame() {
       const allCounties = dao.getAllDefinedCountries();
+
       return allCounties.then(countries => {
-        const freshSession = { countries: countries, askForIndex: 0, score: 0 };
+        const freshSession = { countries: _.shuffle(countries), askForIndex: 0, score: 0 };
         return  {
           session: freshSession,
           data: { askFor: countryToAsk(freshSession)}

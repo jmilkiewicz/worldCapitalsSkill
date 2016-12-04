@@ -31,13 +31,13 @@ describe('get Capitals of Country', () => {
   });
 
   it('returns initialState for game start', () => {
-    const countries = ['Poland', 'Portugal'];
+    const countries = ['Poland', 'Portugal', 'Belarus'];
     getAllDefinedCountriesStub.returns(Promise.resolve(countries));
     return game.startGame().then((result) => {
-      expect(result).to.equal({
-        data: { askFor: "Poland" },
-        session: { countries: countries, askForIndex: 0, score: 0 }
-      });
+
+      expect(result.session).to.include({askForIndex: 0, score: 0 });
+      expect(result.data).to.include({askFor: result.session.countries[0]});
+      expect(result.session.countries).to.include(countries);
     });
   });
 
