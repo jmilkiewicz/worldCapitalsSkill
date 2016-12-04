@@ -23,9 +23,17 @@ const summary = (sessionData) => ({
   validAnswers: sessionData.score
 });
 
+const endOfGameReply = _.flow(summary, _.extend({ endGame: true }));
 
-const endOfGameReply = (sessionData, extras) => _.extend(_.extend({ endGame: true }, summary(sessionData)), extras);
-
+function progressData(newSession) {
+  let extras;
+  if (isEndOfGame(newSession)) {
+    extras = endOfGameReply(newSession)
+  } else {
+    extras = { askFor: countryToAsk(newSession) }
+  }
+  return extras;
+}
 module.exports = (dao) => {
 
   return {
@@ -46,16 +54,9 @@ module.exports = (dao) => {
       return dao.getCapitalsOf(currentCountry).then(_.head).then(capital => {
         const answer = { county: currentCountry, capital: capital };
         const newSession = increaseQuestionIndex(sessionData);
-
-        if (isEndOfGame(newSession)) {
-          return {
-            data: endOfGameReply(newSession, answer)
-          }
-        }
-
         return {
           session: newSession,
-          data: { county: currentCountry, capital: capital, askFor: countryToAsk(newSession) }
+          data: _.extend(answer, progressData(newSession))
         }
       });
     },
@@ -70,16 +71,10 @@ module.exports = (dao) => {
         if (answerCorrect) {
           newSession = _.flow(increaseQuestionIndex, increaseScore)(sessionData);
           success = true;
-
-          if (isEndOfGame(newSession)) {
-            return {
-              data: endOfGameReply(newSession)
-            }
-          }
         }
         return {
           session: newSession,
-          data: { askFor: countryToAsk(newSession), success: success }
+          data: _.extend({ success: success }, progressData(newSession))
         }
       });
     },

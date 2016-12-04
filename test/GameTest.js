@@ -99,7 +99,7 @@ describe('get Capitals of Country', () => {
         };
 
         return skipResult.then((result) => {
-          expect(result).to.equal({ data: expectedData });
+          expect(result.data).to.equal(expectedData);
         });
       });
 
@@ -169,7 +169,8 @@ describe('get Capitals of Country', () => {
         };
 
         const expectedData = {
-          endGame: true, validAnswers: sessionData.score + 1, questions: sessionData.askForIndex + 1
+          endGame: true, validAnswers: sessionData.score + 1, questions: sessionData.askForIndex + 1,
+          success: true
         };
 
         return game.answer('Warsaw', sessionData).then((result) => {
