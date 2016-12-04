@@ -62,28 +62,23 @@ const startGame = function () {
 
 const basicIntents = {
   'AMAZON.HelpIntent': function () {
-    //TODO implement me
     const speechOutput = this.t('HELP_MESSAGE');
     const reprompt = this.t('HELP_MESSAGE');
     this.emit(':ask', speechOutput, reprompt);
   },
   'AMAZON.CancelIntent': function () {
-    console.log("CANCEL INTENT");
     finishGame.call(this);
   },
   'AMAZON.StopIntent': function () {
-    console.log("STOP INTENT");
     finishGame.call(this);
   },
   'SessionEndedRequest': function () {
     this.emit(':tell', this.t('STOP_MESSAGE'));
   },
   'NewSession': function () {
-    console.log('NEW SESSSION');
     startGame.call(this);
   },
   'LaunchRequest': function(){
-    console.log('LAUNCH REQUEST');
     startGame.call(this);
   },
   'DontKnowIntent': function () {
