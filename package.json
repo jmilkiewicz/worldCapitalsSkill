@@ -1,0 +1,36 @@
+{
+  "name": "worldCapitalsSkill",
+  "version": "1.0.0",
+  "description": "What is a capital of ... skill.",
+  "main": "index.js",
+  "scripts": {
+    "test": "lab"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "capitals"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "alexa-sdk": "^1.0.0",
+    "bluebird": "^3.4.6",
+    "lodash": "^4.17.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.7.9",
+    "code": "^4.0.0",
+    "config": "^1.24.0",
+    "del": "^2.2.2",
+    "ggit": "^1.11.1",
+    "gulp": "^3.9.1",
+    "gulp-install": "^0.6.0",
+    "gulp-util": "^3.0.7",
+    "gulp-zip": "^3.2.0",
+    "js-yaml": "^3.7.0",
+    "lab": "^11.2.1",
+    "node-lambda": "^0.8.11",
+    "sinon": "^1.17.6",
+    "tmp": "0.0.31"
+  }
+}
