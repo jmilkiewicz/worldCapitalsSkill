@@ -9,7 +9,6 @@ const APP_ID = 'amzn1.ask.skill.38899241-ff42-425b-984e-9f5993270e76';
 const languageStrings = {
   'en-GB': {
     translation: {
-      SKILL_NAME: 'Next free day',
       GET_FACT_MESSAGE: "Next free day is: ",
       HELP_MESSAGE: 'You can say tell me what is the next day i can stay in bed till noon... What can I help you with?',
       HELP_REPROMPT: 'What can I help you with?',
@@ -25,13 +24,16 @@ const languageStrings = {
   },
   'en-US': {
     translation: {
-      CHEERUP:"Do not give up, you are doing well.",
-      CORRECT_ANSWER: "That's right. Good one !.",
-      WRONG_ANSWER: "I am sorry, your answer is wrong.",
+      QUESTION: "Question number %d. What is a capital of %s ? ",
+      ANSWER: "The capital of %s is  %s .",
+      CHEERUP:"Do not give up, you are doing well .",
+      SUMMARY: "This is your result: you replied correctly for %d of %d questions. Hoped you have fun !",
+      CORRECT_ANSWER: "That's right. Good one !",
+      WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
       GAME_NAME :'Guess Capitals Game',
       SKILL_NAME: 'Next free day',
       GET_FACT_MESSAGE: "Next free day is: ",
-      HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying ',
+      HELP_MESSAGE: 'You will be asked for a capitals of particular country. You can stop any time saying stop',
       HELP_REPROMPT: 'What can I help you with?',
       DISPLAY_CARD_TITLE: "%s  - Next Free Day in %s.",
       COUNTRY_NOT_DEFINED: "I\'m sorry, I do not know in which country to look for",
@@ -45,12 +47,21 @@ const languageStrings = {
   }
 };
 
+const finishGame = function () {
+  game.finish(this.attributes).then((reply) => {
+    let text = this.t('SUMMARY', reply.data.validAnswers, reply.data.questions) + this.t('STOP_MESSAGE');
+    this.emit(':tell', text);
+  });
+};
 
-const  questionText = function(questionNr, country) { return `Question number ${questionNr}. What is a capital of ${country} ? `};
-
-const giveAnswer = function(country, capital) { `The capital of ${country} is  ${capital} .`};
-
-const getSummary = (data) => `This is your result: you replied correctly for ${data.validAnswers} of ${data.questions} questions`;
+const startGame = function () {
+  game.startGame().then(reply => {
+    Object.assign(this.attributes, reply.session);
+    let speechOutput = `Welcome to ${this.t('GAME_NAME')}. I will ask you for capital of countries. Try to get as many right as you can. Good Luck !`;
+    let repromptText = this.t('QUESTION', 1, reply.data.askFor);
+    this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
+  });
+};
 
 
 const basicIntents = {
@@ -61,39 +72,31 @@ const basicIntents = {
     this.emit(':ask', speechOutput, reprompt);
   },
   'AMAZON.CancelIntent': function () {
-    game.finish((reply)=>{
-      let text = getSummary(reply.data) +  this.t('STOP_MESSAGE');
-      this.emit(':tell', text);
-    });
-
+    console.log("CANCEL INTENT");
+    finishGame.call(this);
   },
   'AMAZON.StopIntent': function () {
-    game.finish((reply)=>{
-      let text = getSummary(reply.data) +  this.t('STOP_MESSAGE');
-      this.emit(':tell', text);
-    });
+    console.log("STOP INTENT");
+    finishGame.call(this);
   },
   'SessionEndedRequest': function () {
     this.emit(':tell', this.t('STOP_MESSAGE'));
   },
   'NewSession': function () {
-    //TODO implement me
+    console.log('NEW SESSSION');
+    startGame.call(this);
   },
   'LaunchRequest': function(){
-    game.startGame().then(reply=>{
-      Object.assign(this.attributes, reply.session);
-      let speechOutput = `Welcome to ${GAME_NAME}. I will ask you for capital of countries. Try to get as many right as you can. Good Luck` ;
-      let repromptText = questionText(1, reply.data.askFor);
-      this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
-    });
+    console.log('LAUNCH REQUEST');
+    startGame.call(this);
   },
   'DontKnowIntent': function () {
       game.skip(this.attributes).then(reply=>{
         Object.assign(this.attributes, reply.session);
         const replyData = reply.data;
-        let speechOutput = this.t('CHEERUP') + `: ${giveAnswer(replyData.county, replyData.capital)}`;
+        let speechOutput = this.t('CHEERUP') + this.t('ANSWER', replyData.county, replyData.capital);
         //TODO move question index to reply
-        let repromptText = questionText(reply.session.askForIndex + 1, reply.data.askFor);
+        let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
         this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
       });
   },
@@ -111,7 +114,7 @@ const basicIntents = {
       }else{
         speechOutput = this.t("WRONG_ANSWER");
       }
-      let repromptText = questionText(reply.session.askForIndex + 1, reply.data.askFor);
+      let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
       this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
     });
   }
@@ -123,7 +126,6 @@ exports.handler = (event, context) => {
   alexa.APP_ID = APP_ID;
   // To enable string internationalization (i18n) features, set a resources object.
   alexa.resources = languageStrings;
-  //alexa.registerHandlers(newSessionHandlers, startStateHandlers, triviaStateHandlers, helpStateHandlers);
   alexa.registerHandlers(basicIntents);
   alexa.execute();
 };
