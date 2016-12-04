@@ -16,6 +16,16 @@ const increaseQuestionIndex = increaseProperty('askForIndex');
 
 const countryToAsk = sessionData => sessionData.countries[sessionData.askForIndex];
 
+const isEndOfGame = sessionData => sessionData.countries.length <= sessionData.askForIndex;
+
+const summary = (sessionData) => ({
+  questions: sessionData.askForIndex,
+  validAnswers: sessionData.score
+});
+
+
+const endOfGameReply = (sessionData, extras) => _.extend(_.extend({ endGame: true }, summary(sessionData)), extras);
+
 module.exports = (dao) => {
 
   return {
@@ -34,7 +44,15 @@ module.exports = (dao) => {
       const currentCountry = countryToAsk(sessionData);
 
       return dao.getCapitalsOf(currentCountry).then(_.head).then(capital => {
+        const answer = { county: currentCountry, capital: capital };
         const newSession = increaseQuestionIndex(sessionData);
+
+        if (isEndOfGame(newSession)) {
+          return {
+            data: endOfGameReply(newSession, answer)
+          }
+        }
+
         return {
           session: newSession,
           data: { county: currentCountry, capital: capital, askFor: countryToAsk(newSession) }
@@ -44,7 +62,7 @@ module.exports = (dao) => {
     answer(guess, sessionData) {
       const currentCountry = countryToAsk(sessionData);
 
-      const isAnswerCorrect = dao.getCapitalsOf(currentCountry).then(capitals => _.includes(_.lowerCase(guess))(capitals));
+      const isAnswerCorrect = dao.getCapitalsOf(currentCountry).then(_.includes(_.lowerCase(guess)));
 
       return isAnswerCorrect.then(answerCorrect => {
         let newSession = sessionData;
@@ -52,6 +70,12 @@ module.exports = (dao) => {
         if (answerCorrect) {
           newSession = _.flow(increaseQuestionIndex, increaseScore)(sessionData);
           success = true;
+
+          if (isEndOfGame(newSession)) {
+            return {
+              data: endOfGameReply(newSession)
+            }
+          }
         }
         return {
           session: newSession,
@@ -62,7 +86,7 @@ module.exports = (dao) => {
 
     finish(sessionData) {
       return Promise.resolve({
-        data: { validAnswers: sessionData.score, questions: sessionData.askForIndex }
+        data: summary(sessionData)
       });
     }
 

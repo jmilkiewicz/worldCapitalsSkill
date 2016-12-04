@@ -28,6 +28,7 @@ const languageStrings = {
       ANSWER: "The capital of %s is  %s .",
       CHEERUP:"Do not give up, you are doing well .",
       SUMMARY: "This is your result: you replied correctly for %d of %d questions. Hoped you have fun !",
+      NO_MORE_QUESTIONS: "We reached the end of questions !",
       CORRECT_ANSWER: "That's right. Good one !",
       WRONG_ANSWER: "I am sorry, your answer is wrong. Let's try again .",
       GAME_NAME :'Guess Capitals Game',
@@ -47,9 +48,13 @@ const languageStrings = {
   }
 };
 
-const finishGame = function () {
+//TODO can we use defaults
+const finishGame = function (extraText) {
   game.finish(this.attributes).then((reply) => {
-    let text = this.t('SUMMARY', reply.data.validAnswers, reply.data.questions) + this.t('STOP_MESSAGE');
+    if (!extraText) {
+      extraText = '';
+    }
+    let text = extraText + this.t('SUMMARY', reply.data.validAnswers, reply.data.questions) + this.t('STOP_MESSAGE');
     this.emit(':tell', text);
   });
 };
@@ -95,6 +100,10 @@ const basicIntents = {
         Object.assign(this.attributes, reply.session);
         const replyData = reply.data;
         let speechOutput = this.t('CHEERUP') + this.t('ANSWER', replyData.county, replyData.capital);
+        if (replyData.endGame) {
+          return finishGame(speechOutput)
+        }
+
         //TODO move question index to reply
         let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
         this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
@@ -111,9 +120,13 @@ const basicIntents = {
       let speechOutput;
       if(replyData.success){
         speechOutput = this.t("CORRECT_ANSWER");
+        if (replyData.endGame) {
+          return finishGame(speechOutput);
+        }
       }else{
         speechOutput = this.t("WRONG_ANSWER");
       }
+
       let repromptText = this.t('QUESTION', reply.session.askForIndex + 1, reply.data.askFor);
       this.emit(':askWithCard', speechOutput + repromptText, repromptText, this.t("GAME_NAME"), repromptText);
     });

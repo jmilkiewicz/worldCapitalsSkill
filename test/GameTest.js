@@ -80,7 +80,32 @@ describe('get Capitals of Country', () => {
       });
     });
 
-    //TODO what if not no more countrues
+
+    describe('when no more countries to ask', () => {
+
+      const sessionData = { countries: ["Poland"], askForIndex: 0, score: 2 };
+      let skipResult;
+
+      beforeEach(() => {
+        skipResult = game.skip(sessionData);
+        return skipResult.catch(_.noop);
+      });
+
+
+      it('signals end of the game', () => {
+        const expectedData = {
+          county: "Poland", capital: "Warsaw",
+          endGame: true, validAnswers: sessionData.score, questions: sessionData.askForIndex + 1
+        };
+
+        return skipResult.then((result) => {
+          expect(result).to.equal({ data: expectedData });
+        });
+      });
+
+    });
+
+
   });
 
   describe('on answer', () => {
@@ -134,6 +159,25 @@ describe('get Capitals of Country', () => {
           expect(getCapitalsOfStub.args[0]).to.be.equal([country]);
         });
       });
+
+      it('signals end of the game when no more questions to ask', () => {
+
+        let sessionData = {
+          countries: ["Poland"],
+          askForIndex: 0,
+          score: 0
+        };
+
+        const expectedData = {
+          endGame: true, validAnswers: sessionData.score + 1, questions: sessionData.askForIndex + 1
+        };
+
+        return game.answer('Warsaw', sessionData).then((result) => {
+          expect(result.data).to.include(expectedData);
+        });
+      });
+
+
     });
 
     //TODO what if not no more countrues
@@ -146,7 +190,7 @@ describe('get Capitals of Country', () => {
       const sessionData = { countries: ["Poland", "Belgium", "Switzerland"], askForIndex: 1, score: 0 };
 
       return game.finish(sessionData).then((result) => {
-        expect(result).to.equal({ data: {validAnswers: 0, questions: 1} });
+        expect(result.data).to.include({ validAnswers: 0, questions: 1 });
       });
     });
   });
