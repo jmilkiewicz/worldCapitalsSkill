@@ -10,15 +10,6 @@
       ]
     },
     {
-      "intent": "AnswerOnlyIntent",
-      "slots": [
-        {
-          "name": "City",
-          "type": "LIST_OF_CITIES"
-        }
-      ]
-    },
-    {
       "intent": "DontKnowIntent"
     },
     {

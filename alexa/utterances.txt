@@ -18,3 +18,7 @@ DontKnowIntent dunno
 RepeatIntent again
 RepeatIntent again please
 RepeatIntent can you ask again
+RepeatIntent repeat please
+RepeatIntent repeat
+RepeatIntent can you repeat please
+RepeatIntent can you repeat
