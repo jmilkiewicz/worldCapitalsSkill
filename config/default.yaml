@@ -2,4 +2,6 @@ functionName: 'worldCapitalsSkill'
 credentials:
   accessKeyId: <yourAccessKey>
   secretAccessKey: <yourSecretKey>
-  region: eu-west-1
+region:
+  - us-east-1
+  - eu-west-1
